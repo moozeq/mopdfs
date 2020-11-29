@@ -13,6 +13,7 @@ To OCR languages other than ``eng``:
 
 ```bash
 git clone https://github.com/moozeq/mopdfs
+cd mopdfs
 virtualenv venv
 source venv/bin/activate
 pip3 install -r requirements.txt
