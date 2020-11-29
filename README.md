@@ -1,13 +1,13 @@
 # mopdfs
 
-Merge pdf files and make them searchable with OCR.
+Merge pdf files and make them searchable with Python.
 
 # Requirements
 
 To OCR languages other than ``eng``:
 
-- MacOS: ``brew install python3 tesseract-lang``
-- Ubuntu: ``sudo apt-get install -y python3 tesseract-ocr-all``
+- MacOS: ``brew install tesseract-lang``
+- Ubuntu: ``sudo apt-get install -y tesseract-ocr-all``
 
 # Install
 
@@ -32,4 +32,4 @@ List of available languages can be checked with ``tesseract --list-langs``.
 ./mopdfs.py demo/1.pdf demo/2.pdf -l eng -o merged_ocr.pdf
 ```
 
-Merged and OCRed pdfs will be stored in ``merged_ocr.pdf`` file.
+Merged and searchable pdfs will be stored in ``merged_ocr.pdf`` file.
