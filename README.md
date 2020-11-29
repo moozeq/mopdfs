@@ -4,10 +4,8 @@ Merge pdf files and make them searchable with Python.
 
 # Requirements
 
-To OCR languages other than ``eng``:
-
-- MacOS: ``brew install tesseract-lang``
-- Ubuntu: ``sudo apt-get install -y tesseract-ocr-all``
+- MacOS: ``brew install ocrmypdf tesseract-lang``
+- Ubuntu: ``sudo apt-get install -y ocrmypdf tesseract-ocr-all``
 
 # Install
 

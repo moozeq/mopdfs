@@ -16,7 +16,7 @@ def merge_pdfs(pdfs: list, output_file: str):
 
 
 def ocr_pdf(pdf: str, output_file: str, /, *, lang: str = 'eng'):
-    cmd = f'ocrmypdf -l {lang} {pdf} {output_file}'
+    cmd = f'ocrmypdf {pdf} {output_file} -l {lang} --force-ocr'
     subprocess.run(cmd.split())
 
 
