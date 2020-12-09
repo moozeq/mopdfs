@@ -3,7 +3,26 @@ import argparse
 import subprocess
 
 
+def merge_jpgs(jpgs: list, output_file: str):
+    from fpdf import FPDF
+
+    pdf = FPDF()
+
+    for image in jpgs:
+        pdf.add_page()
+        pdf.image(image,0,0,210,297)
+    pdf.output(output_file, "F")
+
+
 def merge_pdfs(pdfs: list, output_file: str):
+    jpgs = {
+        file for file in pdfs if file.lower().endswith('jpg')
+    }
+    merge_jpgs(jpgs, '__jpgs.pdf')
+    
+    pdfs = set(pdfs) - jpgs
+    pdfs.add('__jpgs.pdf')
+
     from PyPDF2 import PdfFileMerger
 
     merger = PdfFileMerger()
