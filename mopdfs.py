@@ -1,27 +1,32 @@
 #!/usr/bin/env python3
 import argparse
 import subprocess
+from pathlib import Path
+from typing import List
 
 
-def merge_jpgs(jpgs: list, output_file: str):
-    from fpdf import FPDF
+# def merge_jpgs(jpgs: list, output_file: str):
+#     from fpdf import FPDF
 
-    pdf = FPDF()
+#     pdf = FPDF()
 
-    for image in jpgs:
-        pdf.add_page()
-        pdf.image(image,0,0,210,297)
-    pdf.output(output_file, "F")
+#     for image in jpgs:
+#         pdf.add_page()
+#         pdf.image(image,0,0,210,297)
+#     pdf.output(output_file, "F")
+
+#     jpgs = {
+#         file for file in pdfs if file.lower().endswith('jpg')
+#     }
+#     merge_jpgs(jpgs, '__jpgs.pdf')
+    
+#     pdfs = set(pdfs) - jpgs
+#     pdfs.add('__jpgs.pdf')
 
 
 def merge_pdfs(pdfs: list, output_file: str):
-    jpgs = {
-        file for file in pdfs if file.lower().endswith('jpg')
-    }
-    merge_jpgs(jpgs, '__jpgs.pdf')
-    
-    pdfs = set(pdfs) - jpgs
-    pdfs.add('__jpgs.pdf')
+    if Path(output_file).exists():
+        return
 
     from PyPDF2 import PdfFileMerger
 
@@ -32,11 +37,21 @@ def merge_pdfs(pdfs: list, output_file: str):
 
     merger.write(output_file)
     merger.close()
+    print(f'[+] Merged to: {output_file}')
 
 
-def ocr_pdf(pdf: str, output_file: str, /, *, lang: str = 'eng'):
-    cmd = f'ocrmypdf {pdf} {output_file} -l {lang} --force-ocr'
-    subprocess.run(cmd.split())
+def ocr_pdfs(pdfs: List[str], /, *, lang: str = 'eng') -> List[str]:
+    ocred = []
+    for pdf in pdfs:
+        out = f'ocr_{len(ocred)}.pdf'
+        try:
+            subprocess.run(['ocrmypdf', pdf, out, '-l', lang, '--force-ocr'])
+            ocred.append(out)
+            print(f'[+] OCRed: {pdf} -> {out}, ({len(ocred)}/{len(pdfs)})')
+        except:
+            print(f'[-] OCR failed: {pdf}')
+        
+    return ocred
 
 
 if __name__ == '__main__':
@@ -46,5 +61,5 @@ if __name__ == '__main__':
     parser.add_argument('-o', '--out', type=str, default='merged_ocr.pdf', help='Filename for output file')
 
     args = parser.parse_args()
-    merge_pdfs(args.files, f'm_{args.out}')
-    ocr_pdf(f'm_{args.out}', args.out, lang=args.lang)
+    ocred = ocr_pdfs(args.files, lang=args.lang)
+    merge_pdfs(ocred, args.out)
